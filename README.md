@@ -69,6 +69,8 @@ A table stores data in rows and columns.
 * DDL → CREATE, ALTER, DROP
 * DML → INSERT, UPDATE, DELETE
 * DQL → SELECT
+* DCL → GRANT, REVOKE
+* TCL → COMMIT, ROLLBACK
 
 ---
 
