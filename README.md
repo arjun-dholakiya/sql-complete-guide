@@ -448,14 +448,146 @@ CREATE TABLE orders (
 );
 ```
 
+## Cascading (ON DELETE / ON UPDATE CASCADE)
+
+### What is Cascading?
+
+**Cascading** is a feature in SQL that automatically applies changes from a **parent table** to its related **child table**.
+
+👉 It is mainly used with **Foreign Keys**.
+
+When you perform operations like:
+
+* DELETE
+* UPDATE
+
+on the parent table, the same changes are automatically reflected in the child table.
+
 ---
 
-## Cascading
+### Why do we use Cascading?
 
-```sql
-ON DELETE CASCADE
-ON UPDATE CASCADE
+Without cascading:
+
+* You may get errors when deleting parent data
+* Or you may leave **orphan records** (invalid data)
+
+With cascading:
+
+* Data stays **consistent**
+* No manual cleanup required
+
+---
+
+### Example Tables
+
+#### Parent Table: `users`
+
+| id | name  |
+| -- | ----- |
+| 1  | Arjun |
+| 2  | Rahul |
+
+#### Child Table: `orders`
+
+| id  | user_id |
+| --- | ------- |
+| 101 | 1       |
+| 102 | 1       |
+| 103 | 2       |
+
+---
+
+### Creating Tables with Cascading
+
+```sql id="cas1"
+CREATE TABLE users (
+  id INT PRIMARY KEY,
+  name VARCHAR(50)
+);
+
+CREATE TABLE orders (
+  id INT PRIMARY KEY,
+  user_id INT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
 ```
+
+---
+
+## ON DELETE CASCADE
+
+### What it does?
+
+When a row is deleted from the **parent table**,
+all related rows in the **child table** are automatically deleted.
+
+---
+
+### Example
+
+```sql id="cas2"
+DELETE FROM users WHERE id = 1;
+```
+
+### Result:
+
+#### users table
+
+| id | name  |
+| -- | ----- |
+| 2  | Rahul |
+
+#### orders table
+
+| id  | user_id |
+| --- | ------- |
+| 103 | 2       |
+
+👉 All orders with `user_id = 1` are automatically deleted.
+
+---
+
+## ON UPDATE CASCADE
+
+### What it does?
+
+When a value in the parent table (usually primary key) is updated,
+it automatically updates related values in the child table.
+
+---
+
+### Example
+
+```sql id="cas3"
+UPDATE users SET id = 10 WHERE id = 2;
+```
+
+### Result:
+
+#### users table
+
+| id | name  |
+| -- | ----- |
+| 10 | Rahul |
+
+#### orders table
+
+| id  | user_id |
+| --- | ------- |
+| 103 | 10      |
+
+👉 `user_id` automatically updated from 2 → 10
+
+---
+
+### Important Notes
+
+* Cascading works only with **Foreign Keys**
+* Helps maintain **referential integrity**
+* Use carefully to avoid accidental data loss
 
 ---
 
