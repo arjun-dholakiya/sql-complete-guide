@@ -1,4 +1,4 @@
-# SQL Interview Preparation
+# SQL 
 
 A structured and beginner-friendly SQL guide with examples and practice questions.
 This repository is designed to build strong fundamentals for interviews.
